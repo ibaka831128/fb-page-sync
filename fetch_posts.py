@@ -15,6 +15,8 @@ params = {
 response = requests.get(url, params=params)
 data = response.json()
 
+print("API 回應：", json.dumps(data, ensure_ascii=False, indent=2))
+
 with open("posts.json", "w", encoding="utf-8") as f:
     json.dump(data.get("data", []), f, ensure_ascii=False, indent=2)
 
