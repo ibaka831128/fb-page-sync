@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>粉絲專頁貼文</title>
+  <style>
+    body { font-family: sans-serif; max-width: 680px; margin: 40px auto; padding: 0 20px; background: #f0f2f5; }
+    .post { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .post img { width: 100%; border-radius: 6px; margin: 12px 0; }
+    .post time { color: #888; font-size: 0.85em; }
+    .post a { display: inline-block; margin-top: 10px; color: #1877f2; text-decoration: none; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>最新貼文</h1>
+  <div id="posts">載入中...</div>
+
+  <script>
+    fetch('posts.json')
+      .then(r => r.json())
+      .then(posts => {
+        const container = document.getElementById('posts');
+        if (!posts.length) { container.textContent = '尚無貼文'; return; }
+        container.innerHTML = posts.map(p => `
+          <div class="post">
+            ${p.full_picture ? `<img src="${p.full_picture}" alt="">` : ''}
+            <p>${(p.message || p.story || '').replace(/\n/g, '<br>')}</p>
+            <time>${new Date(p.created_time).toLocaleString('zh-TW')}</time><br>
+            <a href="${p.permalink_url}" target="_blank">在 Facebook 查看</a>
+          </div>
+        `).join('');
+      })
+      .catch(() => document.getElementById('posts').textContent = '載入失敗');
+  </script>
+</body>
+</html>
